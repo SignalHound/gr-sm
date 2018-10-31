@@ -1,6 +1,6 @@
 # gr-sm200a
 
-## A [https://www.gnuradio.org]<GNU Radio> module for the [Signal Hound SM200A 20 GHz Real-Time Spectrum Analyzer]<https://signalhound.com/products/sm200a-20-ghz-real-time-spectrum-analyzer/>
+## A [GNU Radio](https://www.gnuradio.org) module for the [Signal Hound SM200A 20 GHz Real-Time Spectrum Analyzer](https://signalhound.com/products/sm200a-20-ghz-real-time-spectrum-analyzer/)
 
 ### Requirements
 
@@ -9,8 +9,8 @@
 
 ### Prerequisites
 
-1. [Install GNU Radio]<https://wiki.gnuradio.org/index.php/InstallingGR>.
-2. [Install the Signal Hound SDK]<https://signalhound.com/software/signal-hound-software-development-kit-sdk/>.
+1. [Install GNU Radio](https://wiki.gnuradio.org/index.php/InstallingGR).
+2. [Install the Signal Hound SDK](https://signalhound.com/software/signal-hound-software-development-kit-sdk/).
     - Follow directions in device_apis/sm_series/linux/README.txt.
 
 ### Installation
