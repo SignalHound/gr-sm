@@ -5,6 +5,7 @@
 ### Requirements
 
 - 64-bit Linux operating system
+    - Tested on Ubuntu 18.04
 - Native USB 3.0 support
 
 ### Prerequisites
@@ -30,5 +31,5 @@ $ sudo ldconfig
 ### Usage
 
 - Add the __SM200A: IQ Source__ block to flowgraphs in the GNU Radio Companion. It is located under the __Signal Hound SM200A__ category.
-    - See examples folder for demos.
-- Use the block in Python code with `import sm200a`.
+    - See _examples_ folder for demos.
+- Use the block in Python with `import sm200a`.
