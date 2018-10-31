@@ -18,13 +18,13 @@
 1. Clone this repository.
 2. Run the following code from the root directory of the repository:
 
-```bash
-mkdir build
-cd build
-cmake ..
-make
-sudo make install
-sudo ldconfig
+```console
+$ mkdir build
+$ cd build
+$ cmake ..
+$ make
+$ sudo make install
+$ sudo ldconfig
 ```
 
 ### Usage
