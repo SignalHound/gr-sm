@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<block>
+  <name>SM200A: IQ Source</name>
+  <key>sm200a_iq</key>
+  <category>[Signal Hound SM200A]</category>
+  <import>import sm200a</import>
+  <make>sm200a.iq($center, $decimation, $bandwidth, $filter, $purge)</make>
+  <callback>set_center($center)</callback>
+  <callback>set_decimation($decimation)</callback>
+  <callback>set_bandwidth($bandwidth)</callback>
+  <callback>set_filter($filter)</callback>
+  <callback>set_purge($purge)</callback>
+
+  <param>
+    <name>Center</name>
+    <key>center</key>
+    <value>1e9</value>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Decimation</name>
+    <key>decimation</key>
+    <value>2</value>
+    <type>int</type>
+  </param>
+
+  <param>
+    <name>Bandwidth</name>
+    <key>bandwidth</key>
+    <value>18e6</value>
+    <type>float</type>
+  </param>
+
+  <param>
+    <name>Software Filter</name>
+    <key>filter</key>
+    <value>False</value>
+    <type>bool</type>
+    <hide>part</hide>
+  </param>
+
+  <param>
+    <name>Purge</name>
+    <key>purge</key>
+    <value>False</value>
+    <type>bool</type>
+    <hide>part</hide>
+  </param>
+
+  <source>
+    <name>out</name>
+    <type>complex</type>
+  </source>
+
+</block>
