@@ -11,14 +11,14 @@
 
 1. [Install GNU Radio](https://wiki.gnuradio.org/index.php/InstallingGR).
 2. [Install the Signal Hound SDK](https://signalhound.com/software/signal-hound-software-development-kit-sdk/).
-    - Follow directions in device_apis/sm_series/linux/README.txt.
+    - Follow directions in _device_apis/sm_series/linux/README.txt_.
 
 ### Installation
 
 1. Clone this repository.
 2. Run the following code from the root directory of the repository:
 
-```
+```bash
 mkdir build
 cd build
 cmake ..
@@ -29,6 +29,6 @@ sudo ldconfig
 
 ### Usage
 
-- Add the "SM200A: IQ Source" block to flowgraphs in the GNU Radio Companion. It is located under the "Signal Hound SM200A" category.
+- Add the __SM200A: IQ Source__ block to flowgraphs in the GNU Radio Companion. It is located under the __Signal Hound SM200A__ category.
     - See examples folder for demos.
-- Use the block in Python code with "import sm200a."
+- Use the block in Python code with `import sm200a`.
