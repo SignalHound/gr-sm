@@ -6,7 +6,7 @@
     <key>options</key>
     <param>
       <key>author</key>
-      <value></value>
+      <value>Example</value>
     </param>
     <param>
       <key>window_size</key>
@@ -78,7 +78,7 @@
     </param>
     <param>
       <key>title</key>
-      <value></value>
+      <value>IQ Streaming</value>
     </param>
   </block>
   <block>
