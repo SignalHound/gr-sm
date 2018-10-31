@@ -1,4 +1,4 @@
-# gr-sm200a
+<h1 align="center">gr-sm200a</h1>
 
 ## A [GNU Radio](https://www.gnuradio.org) module for the [Signal Hound SM200A 20 GHz Real-Time Spectrum Analyzer](https://signalhound.com/products/sm200a-20-ghz-real-time-spectrum-analyzer/)
 
@@ -16,9 +16,9 @@
 ### Installation
 
 1. Clone this repository.
-2. Run the following code from the root directory of the repository:
+2. Run the following commands from the root directory of the repository:
 
-```console
+```
 $ mkdir build
 $ cd build
 $ cmake ..
