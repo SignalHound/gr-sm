@@ -1,16 +1,13 @@
-title: The SM200A OOT Module
-brief: Short description of gr-sm200a
+title: Signal Hound SM200A OOT Module
+brief: Use Signal Hound SM200A 20 GHz Spectrum Analyzer as IQ source.
 tags: # Tags are arbitrary, but look at CGRAN what other authors are using
   - sdr
 author:
-  - Author Name <authors@email.address>
+  - Signal Hound <support@signalhound.com>
 copyright_owner:
-  - Copyright Owner 1
+  - Signal Hound, Inc.
 license:
-#repo: # Put the URL of the repository here, or leave blank for default
-#website: <module_website> # If you have a separate project website, put it here
-#icon: <icon_url> # Put a URL to a square image here that will be used as an icon on CGRAN
+#repo: https://github.com/SignalHound/gr-sm200a.git
+#website: https://signalhound.com
+#icon: https://signalhound.com/sigdownloads/Other/Socials-Logo-256x256-01.jpg
 ---
-A longer, multi-line description of gr-sm200a.
-You may use some *basic* Markdown here.
-If left empty, it will try to find a README file instead.
