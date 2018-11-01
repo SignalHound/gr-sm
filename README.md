@@ -1,3 +1,7 @@
+<p align="center">
+<img src="https://github.com/SignalHound/gr-sm200a/blob/master/docs/SH-GR.jpg" width="75%" />
+</p>
+
 <h1 align="center">gr-sm200a</h1>
 
 ## A [GNU Radio](https://www.gnuradio.org) module for the [Signal Hound SM200A 20 GHz Real-Time Spectrum Analyzer](https://signalhound.com/products/sm200a-20-ghz-real-time-spectrum-analyzer/)
