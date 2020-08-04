@@ -26,17 +26,18 @@
 #include "iq_impl.h"
 
 namespace gr {
-    namespace sm200a {
+    namespace sm200 {
 
         iq::sptr
         iq::make(double center,
                  int decimation,
                  double bandwidth,
                  bool filter,
-                 bool purge)
+                 bool purge,
+                 bool networked)
         {
             return gnuradio::get_initial_sptr(
-                new iq_impl(center, decimation, bandwidth, filter, purge)
+                new iq_impl(center, decimation, bandwidth, filter, purge, networked)
             );
         }
 
@@ -52,7 +53,8 @@ namespace gr {
                          int decimation,
                          double bandwidth,
                          bool filter,
-                         bool purge) :
+                         bool purge,
+                         bool networked) :
             gr::sync_block("iq",
                            gr::io_signature::make(0, 0, 0),
                            gr::io_signature::make(1, 1, sizeof(gr_complex))),
@@ -62,6 +64,7 @@ namespace gr {
             d_bandwidth(bandwidth),
             d_filter(filter),
             d_purge(purge),
+            d_networked(networked),
             d_param_changed(true),
             d_buffer(0),
             d_len(0)
@@ -69,7 +72,11 @@ namespace gr {
             std::cout << "\nAPI Version: " << smGetAPIVersion() << "\n";
 
             // Open device
-            ERROR_CHECK(smOpenDevice(&d_handle));
+            if(d_networked) {
+                ERROR_CHECK(smOpenNetworkedDevice(&d_handle, SM200_ADDR_ANY, SM200_DEFAULT_ADDR, SM200_DEFAULT_PORT));
+            } else {
+                ERROR_CHECK(smOpenDevice(&d_handle));
+            }
 
             int serial;
             SmDeviceType deviceType;
@@ -119,14 +126,20 @@ namespace gr {
         }
 
         void
+        iq_impl::set_networked(bool networked) {
+            gr::thread::scoped_lock lock(d_mutex);
+            d_networked = networked;
+        }
+
+        void
         iq_impl::configure() {
             gr::thread::scoped_lock lock(d_mutex);
 
             // Configure
-            ERROR_CHECK(smSetIQCaptureType(d_handle, smIQStreaming));
             ERROR_CHECK(smSetIQCenterFreq(d_handle, d_center));
             ERROR_CHECK(smSetIQSampleRate(d_handle, d_decimation));
             ERROR_CHECK(smSetIQBandwidth(d_handle, (SmBool)d_filter, d_bandwidth));
+            ERROR_CHECK(smSetIQDataType(d_handle, smDataType32fc));
 
             // Initiate for IQ streaming
             ERROR_CHECK(smConfigure(d_handle, smModeIQ));
@@ -169,6 +182,6 @@ namespace gr {
             return noutput_items;
         }
 
-    } /* namespace sm200a */
+    } /* namespace sm200 */
 } /* namespace gr */
 

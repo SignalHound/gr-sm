@@ -20,19 +20,19 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef _QA_SM200A_H_
-#define _QA_SM200A_H_
+#ifndef _QA_SM200_H_
+#define _QA_SM200_H_
 
 #include <gnuradio/attributes.h>
 #include <cppunit/TestSuite.h>
 
 //! collect all the tests for the gr-filter directory
 
-class __GR_ATTR_EXPORT qa_sm200a
+class __GR_ATTR_EXPORT qa_sm200
 {
  public:
   //! return suite of tests for all of gr-filter directory
   static CppUnit::TestSuite *suite();
 };
 
-#endif /* _QA_SM200A_H_ */
+#endif /* _QA_SM200_H_ */

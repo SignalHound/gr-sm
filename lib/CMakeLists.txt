@@ -25,22 +25,22 @@ include(GrPlatform) #define LIB_SUFFIX
 include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
-list(APPEND sm200a_sources
+list(APPEND sm200_sources
     iq_impl.cc
 )
 
-set(sm200a_sources "${sm200a_sources}" PARENT_SCOPE)
-if(NOT sm200a_sources)
+set(sm200_sources "${sm200_sources}" PARENT_SCOPE)
+if(NOT sm200_sources)
 	MESSAGE(STATUS "No C++ sources... skipping lib/")
 	return()
-endif(NOT sm200a_sources)
+endif(NOT sm200_sources)
 
-add_library(gnuradio-sm200a SHARED ${sm200a_sources})
-target_link_libraries(gnuradio-sm200a ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} "/usr/local/lib/libsm_api.so")
-set_target_properties(gnuradio-sm200a PROPERTIES DEFINE_SYMBOL "gnuradio_sm200a_EXPORTS")
+add_library(gnuradio-sm200 SHARED ${sm200_sources})
+target_link_libraries(gnuradio-sm200 ${Boost_LIBRARIES} ${GNURADIO_ALL_LIBRARIES} "/usr/local/lib/libsm_api.so")
+set_target_properties(gnuradio-sm200 PROPERTIES DEFINE_SYMBOL "gnuradio_sm200_EXPORTS")
 
 if(APPLE)
-    set_target_properties(gnuradio-sm200a PROPERTIES
+    set_target_properties(gnuradio-sm200 PROPERTIES
         INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
     )
 endif(APPLE)
@@ -49,7 +49,7 @@ endif(APPLE)
 # Install built library files
 ########################################################################
 include(GrMiscUtils)
-GR_LIBRARY_FOO(gnuradio-sm200a RUNTIME_COMPONENT "sm200a_runtime" DEVEL_COMPONENT "sm200a_devel")
+GR_LIBRARY_FOO(gnuradio-sm200 RUNTIME_COMPONENT "sm200_runtime" DEVEL_COMPONENT "sm200_devel")
 
 ########################################################################
 # Build and register unit test
@@ -58,22 +58,22 @@ include(GrTest)
 
 include_directories(${CPPUNIT_INCLUDE_DIRS})
 
-list(APPEND test_sm200a_sources
-    ${CMAKE_CURRENT_SOURCE_DIR}/test_sm200a.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/qa_sm200a.cc
+list(APPEND test_sm200_sources
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_sm200.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/qa_sm200.cc
 )
 
-add_executable(test-sm200a ${test_sm200a_sources})
+add_executable(test-sm200 ${test_sm200_sources})
 
 target_link_libraries(
-  test-sm200a
+  test-sm200
   ${GNURADIO_RUNTIME_LIBRARIES}
   ${Boost_LIBRARIES}
   ${CPPUNIT_LIBRARIES}
-  gnuradio-sm200a
+  gnuradio-sm200
 )
 
-GR_ADD_TEST(test_sm200a test-sm200a)
+GR_ADD_TEST(test_sm200 test-sm200)
 
 ########################################################################
 # Print summary

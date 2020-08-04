@@ -19,21 +19,21 @@
  */
 
 
-#ifndef INCLUDED_SM200A_IQ_H
-#define INCLUDED_SM200A_IQ_H
+#ifndef INCLUDED_SM200_IQ_H
+#define INCLUDED_SM200_IQ_H
 
-#include <sm200a/api.h>
+#include <sm200/api.h>
 #include <gnuradio/sync_block.h>
 
 namespace gr {
-  namespace sm200a {
+  namespace sm200 {
 
     /*!
-     * This block acquires IQ data from the Signal Hound SM200A spectrum analyzer.
+     * This block acquires IQ data from the Signal Hound SM200 spectrum analyzer.
      *
      *
      */
-    class SM200A_API iq : virtual public gr::sync_block
+    class SM200_API iq : virtual public gr::sync_block
     {
     public:
       typedef boost::shared_ptr<iq> sptr;
@@ -42,17 +42,19 @@ namespace gr {
                        int decimation,
                        double bandwidth,
                        bool filter,
-                       bool purge);
+                       bool purge,
+                       bool networked);
 
       virtual void set_center(double center) = 0;
       virtual void set_decimation(int decimation) = 0;
       virtual void set_bandwidth(double bandwidth) = 0;
       virtual void set_filter(bool filter) = 0;
       virtual void set_purge(bool purge) = 0;
+      virtual void set_networked(bool networked) = 0;
     };
 
-  } // namespace sm200a
+  } // namespace sm200
 } // namespace gr
 
-#endif /* INCLUDED_SM200A_IQ_H */
+#endif /* INCLUDED_SM200_IQ_H */
 

@@ -18,14 +18,14 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_SM200A_IQ_IMPL_H
-#define INCLUDED_SM200A_IQ_IMPL_H
+#ifndef INCLUDED_SM200_IQ_IMPL_H
+#define INCLUDED_SM200_IQ_IMPL_H
 
-#include <sm200a/iq.h>
-#include <sm200a/sm_api.h>
+#include <sm200/iq.h>
+#include <sm200/sm_api.h>
 
 namespace gr {
-  namespace sm200a {
+  namespace sm200 {
 
     class iq_impl : public iq
     {
@@ -37,6 +37,7 @@ namespace gr {
       double d_bandwidth;
       bool d_filter;
       bool d_purge;
+      bool d_networked;
 
       gr::thread::mutex d_mutex;
       bool d_param_changed;
@@ -49,7 +50,8 @@ namespace gr {
               int decimation,
               double bandwidth,
               bool filter,
-              bool purge);
+              bool purge,
+              bool networked);
       ~iq_impl();
 
       void set_center(double center);
@@ -57,6 +59,7 @@ namespace gr {
       void set_bandwidth(double bandwidth);
       void set_filter(bool filter);
       void set_purge(bool purge);
+      void set_networked(bool networked);
 
       void configure();
 
@@ -65,8 +68,8 @@ namespace gr {
                gr_vector_void_star &output_items);
     };
 
-  } // namespace sm200a
+  } // namespace sm200
 } // namespace gr
 
-#endif /* INCLUDED_SM200A_IQ_IMPL_H */
+#endif /* INCLUDED_SM200_IQ_IMPL_H */
 

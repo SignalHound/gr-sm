@@ -582,7 +582,7 @@
     </param>
   </block>
   <block>
-    <key>sm200a_iq</key>
+    <key>sm200_iq</key>
     <param>
       <key>bandwidth</key>
       <value>bandwidth_entry</value>
@@ -621,7 +621,7 @@
     </param>
     <param>
       <key>id</key>
-      <value>sm200a_iq_0</value>
+      <value>sm200_iq_0</value>
     </param>
     <param>
       <key>maxoutbuf</key>
@@ -647,7 +647,7 @@
     <sink_key>0</sink_key>
   </connection>
   <connection>
-    <source_block_id>sm200a_iq_0</source_block_id>
+    <source_block_id>sm200_iq_0</source_block_id>
     <sink_block_id>blocks_throttle_0</sink_block_id>
     <source_key>0</source_key>
     <sink_key>0</sink_key>

@@ -1,3 +1,4 @@
+/* -*- c++ -*- */
 /*
  * Copyright 2012 Free Software Foundation, Inc.
  *
@@ -19,18 +20,29 @@
  * Boston, MA 02110-1301, USA.
  */
 
-/*
- * This class gathers together all the test cases for the gr-filter
- * directory into a single test suite.  As you create new test cases,
- * add them here.
- */
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
-#include "qa_sm200a.h"
+#include <cppunit/TextTestRunner.h>
+#include <cppunit/XmlOutputter.h>
 
-CppUnit::TestSuite *
-qa_sm200a::suite()
+#include <gnuradio/unittests.h>
+#include "qa_sm200.h"
+#include <iostream>
+#include <fstream>
+
+int
+main (int argc, char **argv)
 {
-  CppUnit::TestSuite *s = new CppUnit::TestSuite("sm200a");
+  CppUnit::TextTestRunner runner;
+  std::ofstream xmlfile(get_unittest_path("sm200.xml").c_str());
+  CppUnit::XmlOutputter *xmlout = new CppUnit::XmlOutputter(&runner.result(), xmlfile);
 
-  return s;
+  runner.addTest(qa_sm200::suite());
+  runner.setOutputter(xmlout);
+
+  bool was_successful = runner.run("", false);
+
+  return was_successful ? 0 : 1;
 }

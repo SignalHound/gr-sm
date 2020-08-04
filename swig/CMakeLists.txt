@@ -20,10 +20,10 @@
 ########################################################################
 # Check if there is C++ code at all
 ########################################################################
-if(NOT sm200a_sources)
+if(NOT sm200_sources)
 	MESSAGE(STATUS "No C++ sources... skipping swig/")
 	return()
-endif(NOT sm200a_sources)
+endif(NOT sm200_sources)
 
 ########################################################################
 # Include swig generation macros
@@ -43,23 +43,23 @@ foreach(incdir ${GNURADIO_RUNTIME_INCLUDE_DIRS})
     list(APPEND GR_SWIG_INCLUDE_DIRS ${incdir}/gnuradio/swig)
 endforeach(incdir)
 
-set(GR_SWIG_LIBRARIES gnuradio-sm200a)
-set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sm200a_swig_doc.i)
+set(GR_SWIG_LIBRARIES gnuradio-sm200)
+set(GR_SWIG_DOC_FILE ${CMAKE_CURRENT_BINARY_DIR}/sm200_swig_doc.i)
 set(GR_SWIG_DOC_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/../include)
 
-GR_SWIG_MAKE(sm200a_swig sm200a_swig.i)
+GR_SWIG_MAKE(sm200_swig sm200_swig.i)
 
 ########################################################################
 # Install the build swig module
 ########################################################################
-GR_SWIG_INSTALL(TARGETS sm200a_swig DESTINATION ${GR_PYTHON_DIR}/sm200a)
+GR_SWIG_INSTALL(TARGETS sm200_swig DESTINATION ${GR_PYTHON_DIR}/sm200)
 
 ########################################################################
 # Install swig .i files for development
 ########################################################################
 install(
     FILES
-    sm200a_swig.i
-    ${CMAKE_CURRENT_BINARY_DIR}/sm200a_swig_doc.i
-    DESTINATION ${GR_INCLUDE_DIR}/sm200a/swig
+    sm200_swig.i
+    ${CMAKE_CURRENT_BINARY_DIR}/sm200_swig_doc.i
+    DESTINATION ${GR_INCLUDE_DIR}/sm200/swig
 )

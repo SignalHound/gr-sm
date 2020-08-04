@@ -1,10 +1,10 @@
-// Copyright (c).2017-2018, Signal Hound, Inc.
+// Copyright (c).2017-2020, Signal Hound, Inc.
 // For licensing information, please see the API license in the software_licenses folder
 
 #ifndef SM_API_H
 #define SM_API_H
 
-#if defined(_WIN32) || defined(_WIN64) // Windows
+#if defined(_WIN32) // Windows
     #ifdef SM_EXPORTS
         #define SM_API __declspec(dllexport)
     #else 
@@ -24,9 +24,17 @@
     #else
         #include <stdint.h>
     #endif
+
+    #define SM_DEPRECATED(comment) __declspec(deprecated(comment))
 #else // Linux 
     #include <stdint.h>
     #define SM_API __attribute__((visibility("default")))
+
+    #if defined(__GNUC__)
+        #define SM_DEPRECATED(comment) __attribute__((deprecated))
+    #else
+        #define SM_DEPRECATED(comment) comment
+    #endif
 #endif
 
 #define SM_INVALID_HANDLE (-1)
@@ -35,6 +43,11 @@
 #define SM_FALSE (0)
 
 #define SM_MAX_DEVICES (9)
+
+// For networked (10GbE devices)
+#define SM200_ADDR_ANY ("0.0.0.0")
+#define SM200_DEFAULT_ADDR ("192.168.2.10")
+#define SM200_DEFAULT_PORT (51665)
 
 #define SM200A_AUTO_ATTEN (-1)
 // Valid atten values [0,6] or -1 for auto
@@ -82,6 +95,10 @@
 #define SM200A_TEMP_WARNING (95.0)
 #define SM200A_TEMP_MAX (102.0)
 
+// SM200B segmented I/Q captures
+#define SM200B_MAX_SEGMENTED_IQ_SEGMENTS (250)
+#define SM200B_MAX_SEGMENTED_IQ_SAMPLES (520e6)
+
 typedef enum SmStatus {
     smCalErr = -1003, // Internal use
     smMeasErr = -1002, // Internal use
@@ -94,6 +111,8 @@ typedef enum SmStatus {
     // IQ decimation value provided not a valid value
     smInvalidIQDecimationErr = -100,
 
+    // Socket/network error
+    smNetworkErr = -53,
     // If the core FX3 program fails to run
     smFx3RunErr = -52,
     // Only can connect up to SM_MAX_DEVICES receivers
@@ -110,6 +129,9 @@ typedef enum SmStatus {
     // Unable to allocate resources needed to configure the measurement mode
     smAllocationErr = -13,
 
+    // Returned when the device detects framing issue on measurement data
+    // Measurement results are likely invalid. Device should be preset/power cycled
+    smSyncErr = -11,
     // Invalid or already active sweep position
     smInvalidSweepPosition = -10,
     // Attempting to perform an operation that cannot currently be performed.
@@ -146,15 +168,22 @@ typedef enum SmStatus {
     smCpuLimited = 7,
     // Returned when the API detects a device with newer features than what was available
     //   when this version of the API was released. Suggested fix, update the API.
-    smUpdateAPI = 8
+    smUpdateAPI = 8,
 } SmStatus;
+
+typedef enum SmDataType {
+    smDataType32fc,
+    smDataType16sc
+} SmDataType;
 
 typedef enum SmMode {
     smModeIdle = 0,
     smModeSweeping = 1,
     smModeRealTime = 2,
-    smModeIQ = 3,
-    smModeAudio = 4
+    smModeIQ = 3, // Use smModeIQStreaming
+    smModeIQStreaming = 3,
+    smModeIQSegmentedCapture = 5,
+    smModeAudio = 4,
 } SmMode;
 
 typedef enum SmSweepSpeed {
@@ -162,6 +191,11 @@ typedef enum SmSweepSpeed {
     smSweepSpeedNormal = 1,
     smSweepSpeedFast = 2
 } SmSweepSpeed;
+
+typedef enum SmIQStreamSampleRate {
+    smIQStreamSampleRateNative = 0,
+    smIQStreamSampleRateLTE = 1,
+} SmIQStreamSampleRate;
 
 typedef enum SmPowerState {
     smPowerStateOn = 0,
@@ -196,17 +230,11 @@ typedef enum SmWindowType {
     smWindowRect = 6
 } SmWindowType;
 
-typedef enum SmIQCaptureType {
-    smIQStreaming = 0,
-    smIQFullBand = 1, // (N/A)
-    smIQSparse = 2 // (N/A)
-} SmIQCaptureType;
-
 typedef enum SmTriggerType {
-    smTriggerTypeImmediate = 0,
+    smTriggerTypeImm = 0,
     smTriggerTypeVideo = 1, 
-    smTriggerTypeExternal = 2,
-    smTriggerTypeFrequencyMask = 3
+    smTriggerTypeExt = 2,
+    smTriggerTypeFMT = 3
 } SmTriggerType;
 
 typedef enum SmTriggerEdge {
@@ -230,7 +258,9 @@ typedef enum SmReference {
 } SmReference;
 
 typedef enum SmDeviceType {
-    smDeviceTypeSM200A = 0
+    smDeviceTypeSM200A = 0,
+    smDeviceTypeSM200B = 1,
+    smDeviceTypeSM200C = 2
 } SmDeviceType;
 
 typedef enum SmAudioType {
@@ -271,20 +301,31 @@ typedef struct SmDeviceDiagnostics {
 extern "C" {
 #endif 
 
-// 'serials' should be an array of SM_MAX_DEVICES ints in size
+// This function is for USB devices only.
 SM_API SmStatus smGetDeviceList(int *serials, int *deviceCount);
+
+SM_API SmStatus smBroadcastNetworkConfig(const char *hostAddr, const char *deviceAddr, uint16_t port, SmBool nonVolatile);
+
+// USB devices only (SM200A/B)
 SM_API SmStatus smOpenDevice(int *device);
 SM_API SmStatus smOpenDeviceBySerial(int *device, int serialNumber);
+// Networked devices only (SM200C)
+SM_API SmStatus smOpenNetworkedDevice(int *device, const char *hostAddr, const char *deviceAddr, uint16_t port);
+
 SM_API SmStatus smCloseDevice(int device);
 SM_API SmStatus smPreset(int device);
 // Preset a device that has not been opened with the smOpenDevice functions
 SM_API SmStatus smPresetSerial(int serialNumber);
+
+SM_API SmStatus smNetworkedSpeedTest(int device, double durationSeconds, double *bytesPerSecond);
 
 SM_API SmStatus smGetDeviceInfo(int device, SmDeviceType *deviceType, int *serialNumber);
 SM_API SmStatus smGetFirmwareVersion(int device, int *major, int *minor, int *revision);
 
 SM_API SmStatus smGetDeviceDiagnostics(int device, float *voltage, float *current, float *temperature);
 SM_API SmStatus smGetFullDeviceDiagnostics(int device, SmDeviceDiagnostics *diagnostics);
+// SM200C only
+SM_API SmStatus smGetSFPDiagnostics(int device, float *temp, float *voltage, float *txPower, float *rxPower);
 
 SM_API SmStatus smSetPowerState(int device, SmPowerState powerState);
 SM_API SmStatus smGetPowerState(int device, SmPowerState *powerState);
@@ -345,14 +386,27 @@ SM_API SmStatus smSetRealTimeDetector(int device, SmDetector detector);
 SM_API SmStatus smSetRealTimeScale(int device, SmScale scale, double frameRef, double frameScale);
 SM_API SmStatus smSetRealTimeWindow(int device, SmWindowType window);
 
-SM_API SmStatus smSetIQCaptureType(int device, SmIQCaptureType captureType);
+SM_API SmStatus smSetIQBaseSampleRate(int device, SmIQStreamSampleRate sampleRate);
+SM_API SmStatus smSetIQDataType(int device, SmDataType dataType);
 SM_API SmStatus smSetIQCenterFreq(int device, double centerFreqHz);
 SM_API SmStatus smGetIQCenterFreq(int device, double *centerFreqHz);
 SM_API SmStatus smSetIQSampleRate(int device, int decimation);
 SM_API SmStatus smSetIQBandwidth(int device, SmBool enableSoftwareFilter, double bandwidth);
 SM_API SmStatus smSetIQExtTriggerEdge(int device, SmTriggerEdge edge);
-SM_API SmStatus smGetIQExtTriggerEdge(int device, SmTriggerEdge *edge);
-SM_API SmStatus smSetIQUSBQueueSize(int device, float ms);
+// Generally this function does not need to be called. 
+// Please read the API manual before using this function.
+SM_API SmStatus smSetIQQueueSize(int device, float ms);
+
+// Begin Segmented I/Q configuration, SM200B only
+SM_API SmStatus smSetSegIQDataType(int device, SmDataType dataType);
+SM_API SmStatus smSetSegIQCenterFreq(int device, double centerFreqHz);
+SM_API SmStatus smSetSegIQVideoTrigger(int device, double triggerLevel, SmTriggerEdge triggerEdge);
+SM_API SmStatus smSetSegIQExtTrigger(int device, SmTriggerEdge extTriggerEdge);
+SM_API SmStatus smSetSegIQFMTParams(int device, int fftSize, const double *frequencies, const double *ampls, int count);
+SM_API SmStatus smSetSegIQSegmentCount(int device, int segmentCount);
+SM_API SmStatus smSetSegIQSegment(int device, int segment, SmTriggerType triggerType,
+                                  int preTrigger, int captureSize, double timeoutSeconds);
+// End Segmented I/Q configuration
 
 SM_API SmStatus smSetAudioCenterFreq(int device, double centerFreqHz);
 SM_API SmStatus smSetAudioType(int device, SmAudioType audioType);
@@ -367,7 +421,12 @@ SM_API SmStatus smGetSweepParameters(int device, double *actualRBW, double *actu
                                      double *actualStartFreq, double *binSize, int *sweepSize);
 SM_API SmStatus smGetRealTimeParameters(int device, double *actualRBW, int *sweepSize, double *actualStartFreq,
                                         double *binSize, int *frameWidth, int *frameHeight, double *poi);
+// Retrieve I/Q parameters for streaming and segmented I/Q captures.
 SM_API SmStatus smGetIQParameters(int device, double *sampleRate, double *bandwidth);
+// Retrieve the correction factor/scalar for streaming and segmented I/Q captures.
+SM_API SmStatus smGetIQCorrection(int device, float *scale);
+
+SM_API SmStatus smSegIQGetMaxCaptures(int device, int *maxCaptures);
 
 // Performs a single sweep, blocking function
 SM_API SmStatus smGetSweep(int device, float *sweepMin, float *sweepMax, int64_t *nsSinceEpoch);
@@ -379,9 +438,23 @@ SM_API SmStatus smFinishSweep(int device, int pos, float *sweepMin, float *sweep
 SM_API SmStatus smGetRealTimeFrame(int device, float *colorFrame, float *alphaFrame, float *sweepMin,
                                    float *sweepMax, int *frameCount, int64_t *nsSinceEpoch);
 
-//SM_API SmStatus smGetIQSimple(int device, float *iqBuf, int iqBufSize, SmBool purge);
-SM_API SmStatus smGetIQ(int device, float *iqBuf, int iqBufSize, double *triggers, int triggerBufSize, 
+SM_API SmStatus smGetIQ(int device, void *iqBuf, int iqBufSize, double *triggers, int triggerBufSize, 
                         int64_t *nsSinceEpoch, SmBool purge, int *sampleLoss, int *samplesRemaining);
+
+// Begin Segmented I/Q acquisition functions, SM200B only
+SM_API SmStatus smSegIQCaptureStart(int device, int capture);
+SM_API SmStatus smSegIQCaptureWait(int device, int capture);
+SM_API SmStatus smSegIQCaptureWaitAsync(int device, int capture, SmBool *completed);
+SM_API SmStatus smSegIQCaptureTimeout(int device, int capture, int segment, SmBool *timedOut);
+SM_API SmStatus smSegIQCaptureTime(int device, int capture, int segment, int64_t *nsSinceEpoch);
+SM_API SmStatus smSegIQCaptureRead(int device, int capture, int segment, void *iq, int offset, int len);
+SM_API SmStatus smSegIQCaptureFinish(int device, int capture);
+// Convenience function for a single segment capture.
+SM_API SmStatus smSegIQCaptureFull(int device, int capture, void *iq, int offset, int len, 
+                                   int64_t *nsSinceEpoch, SmBool *timedOut);
+// Convenience function to resample a 250 MS/s capture to the LTE rate of 245.76 MS/s
+SM_API SmStatus smSegIQLTEResample(float *input, int inputLen, float *output, int *outputLen, bool clearDelayLine);
+// End Segmented I/Q acquisition functions
 
 SM_API SmStatus smGetAudio(int device, float *audio);
 
@@ -397,6 +470,9 @@ SM_API SmStatus smGetCalDate(int device, uint64_t *lastCalDate);
 SM_API const char* smGetAPIVersion();
 SM_API const char* smGetErrorString(SmStatus status);
 SM_API const char* smGetProductID();
+
+SM_DEPRECATED("smSetIQUSBQueueSize has been deprecated, use smSetIQQueueSize")
+SM_API SmStatus smSetIQUSBQueueSize(int device, float ms);
 
 #ifdef __cplusplus
 } // Extern "C"

@@ -22,5 +22,5 @@
 ########################################################################
 install(FILES
     api.h
-    iq.h DESTINATION include/sm200a
+    iq.h DESTINATION include/sm200
 )

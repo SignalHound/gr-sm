@@ -19,15 +19,15 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_SM200A_API_H
-#define INCLUDED_SM200A_API_H
+#ifndef INCLUDED_SM200_API_H
+#define INCLUDED_SM200_API_H
 
 #include <gnuradio/attributes.h>
 
-#ifdef gnuradio_sm200a_EXPORTS
-#  define SM200A_API __GR_ATTR_EXPORT
+#ifdef gnuradio_sm200_EXPORTS
+#  define SM200_API __GR_ATTR_EXPORT
 #else
-#  define SM200A_API __GR_ATTR_IMPORT
+#  define SM200_API __GR_ATTR_IMPORT
 #endif
 
-#endif /* INCLUDED_SM200A_API_H */
+#endif /* INCLUDED_SM200_API_H */

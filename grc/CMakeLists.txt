@@ -18,5 +18,5 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    sm200a_iq.xml DESTINATION share/gnuradio/grc/blocks
+    sm200_iq.xml DESTINATION share/gnuradio/grc/blocks
 )

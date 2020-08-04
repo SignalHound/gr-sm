@@ -19,14 +19,14 @@
 # The presence of this file turns this directory into a Python package
 
 '''
-This is the GNU Radio SM200A module. Place your Python package
+This is the GNU Radio SM200 module. Place your Python package
 description here (python/__init__.py).
 '''
 
-# import swig generated symbols into the sm200a namespace
+# import swig generated symbols into the sm200 namespace
 try:
 	# this might fail if the module is python-only
-	from sm200a_swig import *
+	from sm200_swig import *
 except ImportError:
 	pass
 

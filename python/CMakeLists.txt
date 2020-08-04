@@ -31,7 +31,7 @@ endif()
 GR_PYTHON_INSTALL(
     FILES
     __init__.py
-    DESTINATION ${GR_PYTHON_DIR}/sm200a
+    DESTINATION ${GR_PYTHON_DIR}/sm200
 )
 
 ########################################################################
@@ -39,5 +39,5 @@ GR_PYTHON_INSTALL(
 ########################################################################
 include(GrTest)
 
-set(GR_TEST_TARGET_DEPS gnuradio-sm200a)
+set(GR_TEST_TARGET_DEPS gnuradio-sm200)
 set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
