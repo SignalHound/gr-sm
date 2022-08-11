@@ -7,7 +7,7 @@
 ### Requirements
 
 - 64-bit Linux operating system
-  - Tested on Ubuntu 20.
+  - Tested on Ubuntu 20.04
 - Native USB 3.0 support (SM200A/B and SM435B)
 - 10 GbE SFP+ network interface adapter (SM200C and SM435C)
 
