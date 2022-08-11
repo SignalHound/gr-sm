@@ -1,7 +1,6 @@
 /*!
- * \defgroup block GNU Radio SM200 C++ Signal Processing Blocks
- * \brief All C++ blocks that can be used from the SM200 GNU Radio
+ * \defgroup block GNU Radio SM C++ Signal Processing Blocks
+ * \brief All C++ blocks that can be used from the SM GNU Radio
  *        module are listed here or in the subcategories below.
  *
  */
-

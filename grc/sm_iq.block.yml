@@ -1,0 +1,54 @@
+id: sm_iq
+label: 'SM: IQ Source'
+category: '[Signal Hound]'
+
+templates:
+  imports: import sm
+  make: sm.iq(${center}, ${reflevel}, ${decimation}, ${bandwidth}, ${filter}, ${purge}, ${networked})
+  callbacks:
+  - set_center(${center})
+  - set_reflevel(${reflevel})
+  - set_decimation(${decimation})
+  - set_bandwidth(${bandwidth})
+  - set_filter(${filter})
+  - set_purge(${purge})
+  - set_networked(${networked})
+
+parameters:
+- id: center
+  label: Center Frequency
+  dtype: float
+  default: 1e9
+- id: reflevel
+  label: Reference Level
+  dtype: float
+  default: -20
+- id: decimation
+  label: Decimation
+  dtype: int
+  default: 2
+- id: bandwidth
+  label: Bandwidth
+  dtype: float
+  default: 20e6  
+- id: filter
+  label: Software Filter
+  dtype: bool
+  default: true
+- id: purge
+  label: Purge
+  dtype: bool
+  default: false
+- id: networked
+  label: Networked
+  dtype: bool
+  default: false    
+
+inputs:
+
+outputs:
+- label: out
+  domain: stream
+  dtype: complex
+
+file_format: 1
